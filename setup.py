@@ -10,6 +10,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        myfin=fin:cli
+        fin=fin:cli
     ''',
 )
