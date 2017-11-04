@@ -127,12 +127,16 @@ class TransactionTest(unittest.TestCase):
         ***REMOVED***
         ***REMOVED***
         ***REMOVED***
-        t = Transaction(date, amt, desc, bal)
+        ***REMOVED***
+        pmt_type = "ACH"
+        t = Transaction(t_id, date, amt, desc, pmt_type, bal)
 
+        self.assertEqual(t_id, t.t_id)
         self.assertEqual(date, t.date)
         self.assertEqual(float(amt), t.amount)
         self.assertEqual(desc, t.description)
         self.assertEqual(float(bal), t.balance)
+        self.assertEqual(pmt_type, t.pmt_type)
         # test blank category
         self.assertEqual("", t.category)
 

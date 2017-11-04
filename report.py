@@ -54,13 +54,20 @@ class Report(object):
 class Transaction(object):
     """Transaction is a record of a single transaction."""
 
-    def __init__(self, date="1/1/1993", amt=0.0, desc="empty", bal=0.0):
+    def __init__(self, t_id=0,
+                 date="1/1/1993",
+                 amt=0.0,
+                 desc="empty",
+                 pmt_type="none",
+                 bal=0.0):
         """Transaction() creates a new transaction record."""
         super(Transaction, self).__init__()
+        self.t_id = t_id
         self.date = date
         self.amount = float(amt)
         self.description = desc
         self.balance = float(bal)
+        self.pmt_type = pmt_type
         self.category = ""
 
     def update_category(self, category=""):
