@@ -16,11 +16,11 @@ def cli():
 @click.pass_context
 def report(ctx, infile):
     """Generate a basic report from a csv file."""
-    r = Report()
     try:
         ts = utils.csvload(infile)
     except utils.InvalidCSV as e:
         ctx.fail("Failed to load %s: %s" % (infile, str(e)))
+    r = Report()
     for t in ts:
         r.add_transaction(t)
     click.echo(r)

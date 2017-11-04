@@ -28,6 +28,11 @@ class UtilsTest(unittest.TestCase):
                           "testfiles/csvload_notacsv.test")
 
     def test_csvload_invalidfieldscsv(self):
-        """Test csvload with a csv file with invalid fields."""
+        """Test csvload with a csv file with invalid field headers."""
         self.assertRaises(utils.InvalidCSV, utils.csvload,
                           "testfiles/csvload_invalidfieldscsv.test")
+
+    def test_csvload_nodescriptioncsv(self):
+        """Test csvload with a csv file with poorly formatted rows."""
+        self.assertRaises(utils.InvalidCSV, utils.csvload,
+                          "testfiles/csvload_nodescriptioncsv.test")
