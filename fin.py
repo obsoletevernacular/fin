@@ -4,16 +4,22 @@ import click
 from report import Report
 import utils
 
-import sys
+
+@click.group()
+def cli():
+    """Manage personal finances, simply."""
+    pass
 
 
 @click.command()
-def cli():
-    """Cli entrypoint for fin cli application."""
-    click.echo('Hello Fin.')
-    r = Report("blank")
-    ts = utils.csvload("test.csv")
-    if ts is None:
-        sys.exit(-1)
+@click.argument('infile', type=click.File('rb'))
+def report(infile):
+    """Generate a basic report from a csv file."""
+    r = Report()
+    ts = utils.csvload(infile)
     for t in ts:
         r.add_transaction(t)
+    click.echo(r)
+
+
+cli.add_command(report)
