@@ -53,3 +53,28 @@ summary
 The interface here is geared towards csv files downloaded from an online banking
 site. This makes it easy to do something like `fin report bank/2017/*_jan.csv`
 to get a report of all transactions from January 2017.
+
+A note on CSV formatting: `fin` will reject any csv file without these headers:
+```
+"Transaction ID"
+"Posting Date"
+"Effective Date"
+"Transaction Type"
+"Amount"
+"Check Number"
+"Reference Number"
+"Description"
+"Transaction Category"
+"Type"
+"Balance""Transaction ID"
+"Posting Date"
+"Effective Date"
+"Transaction Type"
+"Amount"
+"Check Number"
+"Reference Number"
+"Description"
+"Transaction Category"
+"Type"
+"Balance"
+```
