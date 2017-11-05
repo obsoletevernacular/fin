@@ -56,7 +56,7 @@ class Report(object):
 class Transaction(object):
     """Transaction is a record of a single transaction."""
 
-    def __init__(self, t_id=0,
+    def __init__(self, t_id="0",
                  date="1/1/1993",
                  amt=0.0,
                  desc="empty",
