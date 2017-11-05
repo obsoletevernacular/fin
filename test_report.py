@@ -41,7 +41,8 @@ class ReportTest(unittest.TestCase):
     transactions_out: 0
     sum: 0.00
     sum_in: 0.00
-    sum_out: 0.00"""
+    sum_out: 0.00
+    avg: 0.00"""
         self.assertEqual(0, len(r.transactions))
         self.assertEqual(expected_str, str(r))
 

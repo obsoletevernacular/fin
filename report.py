@@ -10,7 +10,8 @@ class Report(object):
     transactions_out: %d
     sum: %.2f
     sum_in: %.2f
-    sum_out: %.2f"""
+    sum_out: %.2f
+    avg: %.2f"""
 
     def __init__(self, account="default"):
         """Report() creates a report."""
@@ -48,7 +49,8 @@ class Report(object):
                                   len(self.trans_out),
                                   self.sum,
                                   self.sum_in,
-                                  self.sum_out)
+                                  self.sum_out,
+                                  self.avg())
 
 
 class Transaction(object):

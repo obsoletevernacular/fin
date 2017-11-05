@@ -16,7 +16,10 @@ def cli():
 @click.argument('infiles', type=click.File('r'), nargs=-1)
 @click.pass_context
 def report(ctx, infiles):
-    """Generate a basic report from a csv file."""
+    """Generate a basic report from a group of csv files.
+
+    INFILES - <account>_<timeframe>.csv ...
+    """
     report = Report("summary")
     rs = []
     if len(infiles) == 0:
