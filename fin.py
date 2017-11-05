@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """fin.py."""
 import click
 from report import Report
@@ -7,7 +6,7 @@ import os.path as path
 
 
 @click.group()
-def cli():
+def fin():
     """Manage personal finances, simply."""
     pass
 
@@ -44,4 +43,4 @@ def report(ctx, infiles):
     click.echo(report)
 
 
-cli.add_command(report)
+fin.add_command(report)

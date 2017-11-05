@@ -1,0 +1,9 @@
+Usage: fin [OPTIONS] COMMAND [ARGS]...
+
+  Manage personal finances, simply.
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  report  Generate a basic report from a group of csv...

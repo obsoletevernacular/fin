@@ -7,9 +7,10 @@ setup(
     py_modules=['report'],
     install_requires=[
         'Click',
+        'pytest',
     ],
     entry_points='''
         [console_scripts]
-        fin=fin:cli
+        fin=fin:fin
     ''',
 )
