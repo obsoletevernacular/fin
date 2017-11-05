@@ -1,0 +1,10 @@
+Transaction ID,Posting Date,Effective Date,Transaction Type,Amount,Check Number,Reference Number,Description,Transaction Category,Type,Balance
+"20171031 333333 333 333,333,333,333",43039,43036,Debit,-4.99,,30,Ext Credit Card Debit PLACE  LOCATION,AUTOCAT,Credit Card,0
+"20171030 333333 333 333,333,333,334",43038,43034,Debit,-26,,31,Ext Credit Card Debit PLACE  LOCATION,,Credit Card,0
+"20171030 333333 333 333,333,333,335",43038,43034,Debit,-5.5,,32,Ext Credit Card Debit PLACE  LOCATION,,Credit Card,0
+"20171030 333333 333 333,333,333,336",43038,43034,Debit,-56.53,,33,Ext Credit Card Debit PLACE  LOCATION,,Credit Card,0
+"20171028 333333 333 333,333,333,337",43036,43034,Debit,-11.37,,34,Ext Credit Card Debit PLACE  LOCATION,,Credit Card,0
+"20171028 333333 333 333,333,333,338",43036,43034,Debit,-3.65,,35,Ext Credit Card Debit PLACE  LOCATION,,Credit Card,0
+"20171026 333333 333 333,333,333,339",43034,43032,Debit,-17.29,,36,Ext Credit Card Debit PLACE  LOCATION,,Credit Card,0
+"20171026 333333 333 333,333,333,340",43034,43032,Debit,-2.97,,37,Ext Credit Card Debit PLACE  LOCATION,,Credit Card,0
+"20171026 333333 333 333,333,333,341",43034,43033,Debit,-34.86,,38,Ext Credit Card Debit PLACE  LOCATION,,Credit Card,0

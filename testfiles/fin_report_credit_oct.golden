@@ -1,0 +1,17 @@
+fin_report_credit_oct
+    transactions: 9
+    transactions_in: 0
+    transactions_out: 9
+    sum: -163.16
+    sum_in: 0.00
+    sum_out: -163.16
+    avg: -18.13
+1 files processed. summary report below:
+summary
+    transactions: 9
+    transactions_in: 0
+    transactions_out: 9
+    sum: -163.16
+    sum_in: 0.00
+    sum_out: -163.16
+    avg: -18.13

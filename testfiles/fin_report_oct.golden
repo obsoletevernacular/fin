@@ -1,0 +1,33 @@
+fin_report_checking_oct
+    transactions: 9
+    transactions_in: 1
+    transactions_out: 8
+    sum: -15.27
+    sum_in: 10.00
+    sum_out: -25.27
+    avg: -1.70
+fin_report_credit_oct
+    transactions: 9
+    transactions_in: 0
+    transactions_out: 9
+    sum: -163.16
+    sum_in: 0.00
+    sum_out: -163.16
+    avg: -18.13
+fin_report_savings_oct
+    transactions: 7
+    transactions_in: 3
+    transactions_out: 4
+    sum: -30.75
+    sum_in: 60.84
+    sum_out: -91.59
+    avg: -4.39
+3 files processed. summary report below:
+summary
+    transactions: 25
+    transactions_in: 4
+    transactions_out: 21
+    sum: -209.18
+    sum_in: 70.84
+    sum_out: -280.02
+    avg: -8.37
