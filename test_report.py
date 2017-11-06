@@ -61,6 +61,15 @@ def test_report_load_notreport(report):
     pytest.raises(Report.ReportLoadError, report.load, db_file)
 
 
+def test_report_load_badpickle(report):
+    """Test report load with a non picklable object."""
+    db_file = ".badpickle.obj"
+    with open(db_file, "w") as fh:
+        fh.write("This is not a pickle.")
+    fh.closed
+    pytest.raises(Report.ReportLoadError, report.load, db_file)
+
+
 def test_report_load_nofile(report):
     """Test loading a report with a nonexistent file."""
     db_path = ".noexist.obj"
