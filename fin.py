@@ -50,7 +50,7 @@ def import_transactions(ctx, infiles, db):
 
 @click.command()
 @click.pass_context
-@click.option('--db', default=".default.obj", type=click.Path())
+@click.option('--db', default=".default.obj", type=click.Path(exists=True))
 def load(ctx, db):
     """Load and display a stored report."""
     click.echo("Generating a report from %s" % db)
