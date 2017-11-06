@@ -5,6 +5,58 @@ exported transactions.
 
 ## Usage
 
+### Importing transactions:
+
+Transactions can be imported from csv files and stored to python object files
+for later retrieval (analysis).
+
+```
+$ fin import --db myreport.obj infile1.csv infile2.csv
+```
+
+Inputs:
+
+* `db` location to store objects, defaults to `.default.obj`
+* `INFILES` files to load
+
+**A note** on CSV formatting: `fin` will reject any csv file without these headers:
+```
+"Transaction ID"
+"Posting Date"
+"Effective Date"
+"Transaction Type"
+"Amount"
+"Check Number"
+"Reference Number"
+"Description"
+"Transaction Category"
+"Type"
+"Balance""Transaction ID"
+"Posting Date"
+"Effective Date"
+"Transaction Type"
+"Amount"
+"Check Number"
+"Reference Number"
+"Description"
+"Transaction Category"
+"Type"
+"Balance"
+```
+
+### Retrieving Transactions
+
+A stored group of transactions can be retrieved from a stored file:
+
+```
+$ fin load --db myreport.obj
+```
+
+Inputs:
+
+* `db` location to store objects, defaults to `.default.obj`
+
+
 ### Basic Reports
 
 Basic reports can be generated from csv files containing transactions using the
@@ -57,30 +109,7 @@ The interface here is geared towards csv files downloaded from an online banking
 site. This makes it easy to do something like `fin report bank/2017/*_jan.csv`
 to get a report of all transactions from January 2017.
 
-**A note** on CSV formatting: `fin` will reject any csv file without these headers:
-```
-"Transaction ID"
-"Posting Date"
-"Effective Date"
-"Transaction Type"
-"Amount"
-"Check Number"
-"Reference Number"
-"Description"
-"Transaction Category"
-"Type"
-"Balance""Transaction ID"
-"Posting Date"
-"Effective Date"
-"Transaction Type"
-"Amount"
-"Check Number"
-"Reference Number"
-"Description"
-"Transaction Category"
-"Type"
-"Balance"
-```
+
 
 ## Dev Setup
 

@@ -6,4 +6,6 @@ Options:
   --help  Show this message and exit.
 
 Commands:
+  import  Import a set of transactions from csv files.
+  load    Load and display a stored report.
   report  Generate a basic report from a group of csv...
