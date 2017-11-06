@@ -6,3 +6,4 @@ venv
 *.eggs
 .cache
 *.egg-info
+*.obj
