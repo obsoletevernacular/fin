@@ -2,6 +2,34 @@
 import unittest
 from report import Report
 from report import Transaction
+import os
+import pickle
+import pytest
+
+
+@pytest.fixture
+def report(tmpdir):
+    """Pytest fixture to return a default report."""
+    tmpdir.chdir()
+    return Report()
+
+
+def test_report_save_default(report):
+    """Test report save functionality."""
+    default_obj = ".default.obj"
+    report.save()
+    assert os.path.exists(default_obj)
+    fh = open(default_obj, "r")
+    z = pickle.load(fh)
+    # assume two reports are equal if their str() are equal
+    assert str(z) == str(report)
+
+
+def test_report_save_db(report):
+    """Test report save with a passed db path."""
+    db_path = ".testdb.obj"
+    report.save(db_path)
+    assert os.path.exists(db_path)
 
 
 class ReportTest(unittest.TestCase):
@@ -151,3 +179,12 @@ class TransactionTest(unittest.TestCase):
         t = Transaction()
         t.update_category("atm")
         self.assertEqual("atm", t.category)
+
+    @unittest.skip("categorize not quite there yet.")
+    def test_categorize_pos(self):
+        """Test tranasaction self-catorization funcitonality."""
+        t = Transaction(desc="POS Transaction PLACE      LOCATION")
+        t.categorize()
+        self.assertEqual("POS Transaction", t.type)
+        self.assertEqual("PLACE", t.business)
+        self.assertEqual("LOCATION", t.locale)
