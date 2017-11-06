@@ -10,19 +10,25 @@ import pytest
 @pytest.fixture
 def report(tmpdir):
     """Pytest fixture to return a default report."""
-    tmpdir.chdir()
-    return Report()
+    cwd = tmpdir.chdir()
+    yield Report()
+    cwd.chdir()
 
 
-def test_report_save_default(report):
+def test_report_save(report):
     """Test report save functionality."""
-    default_obj = ".default.obj"
     report.save()
-    assert os.path.exists(default_obj)
-    fh = open(default_obj, "r")
+    fh = open(".default.obj", "r")
     z = pickle.load(fh)
     # assume two reports are equal if their str() are equal
     assert str(z) == str(report)
+
+
+def test_report_save_default(report):
+    """Test report save default location."""
+    default_obj = ".default.obj"
+    report.save()
+    assert os.path.exists(default_obj)
 
 
 def test_report_save_db(report):
@@ -30,6 +36,21 @@ def test_report_save_db(report):
     db_path = ".testdb.obj"
     report.save(db_path)
     assert os.path.exists(db_path)
+
+
+def test_report_load(report):
+    """Test report load."""
+    db_path = ".testdb.obj"
+    r = Report("saved")
+    r.save(db_path)
+    report.load(db_path)
+    assert str(r) == str(report)
+
+
+def test_report_load_nofile(report):
+    """Test loading a report with a nonexistent file."""
+    db_path = ".noexist.obj"
+    pytest.raises(Report.ReportLoadError, report.load, db_path)
 
 
 class ReportTest(unittest.TestCase):
