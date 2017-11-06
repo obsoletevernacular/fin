@@ -63,6 +63,7 @@ def load(ctx, db):
     except Exception as e:
         ctx.fail(e)
 
+
 @click.command()
 @click.argument('infiles', type=click.File('r'), nargs=-1)
 @click.pass_context
