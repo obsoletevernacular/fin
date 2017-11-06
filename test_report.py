@@ -47,6 +47,20 @@ def test_report_load(report):
     assert str(r) == str(report)
 
 
+def test_report_load_notreport(report):
+    """Test report load with a non report object."""
+    db_file = ".notreport.obj"
+
+    class NotReport():
+        pass
+
+    with open(db_file, "w") as fh:
+        nr = NotReport()
+        pickle.dump(nr, fh)
+    fh.closed
+    pytest.raises(Report.ReportLoadError, report.load, db_file)
+
+
 def test_report_load_nofile(report):
     """Test loading a report with a nonexistent file."""
     db_path = ".noexist.obj"
