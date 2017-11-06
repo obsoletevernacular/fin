@@ -39,7 +39,6 @@ class FinTest(unittest.TestCase):
         tests = ["testfiles/fin_report_checking_oct.test",
                  "testfiles/fin_report_credit_oct.test",
                  "testfiles/fin_report_savings_oct.test"]
-        # args = ["report"].append(tests)
         result = runner.invoke(fin.report, tests)
         golden = ""
         with open("testfiles/fin_report_oct.golden", "r") as f:
