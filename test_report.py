@@ -1,6 +1,7 @@
 """Unit tests for report.py."""
 import unittest
 from report import Report
+from report import SuperReport
 from report import Transaction
 import os
 import pickle
@@ -12,6 +13,14 @@ def report(tmpdir):
     """Pytest fixture to return a default report."""
     cwd = tmpdir.chdir()
     yield Report()
+    cwd.chdir()
+
+
+@pytest.fixture
+def superreport(tmpdir):
+    """Pytest fixture to return a default super report."""
+    cwd = tmpdir.chdir()
+    yield SuperReport()
     cwd.chdir()
 
 
@@ -45,6 +54,13 @@ def test_report_load(report):
     r.save(db_path)
     report.load(db_path)
     assert str(r) == str(report)
+
+
+def test_superreport_add_report(superreport):
+    """Test report adding a report."""
+    r = Report("test1")
+    superreport.add_report(r)
+    assert 1 == len(superreport.reports)
 
 
 def test_report_load_notreport(report):

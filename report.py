@@ -79,6 +79,19 @@ class Report(object):
                                   self.avg())
 
 
+class SuperReport(Report):
+    """Enhanced report, moslty a container for several other reports."""
+
+    def __init__(self, name="summary"):
+        """Build a superreport."""
+        super(SuperReport, self).__init__(name)
+        self.reports = []
+
+    def add_report(self, r):
+        """Add a sub-report to the report."""
+        self.reports.append(r)
+
+
 class Transaction(object):
     """Transaction is a record of a single transaction."""
 
