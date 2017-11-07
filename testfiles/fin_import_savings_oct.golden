@@ -1,4 +1,13 @@
 1 files processed and stored to .default.obj
+fin_import_savings_oct
+    transactions: 7
+    transactions_in: 3
+    transactions_out: 4
+    sum: -30.75
+    sum_in: 60.84
+    sum_out: -91.59
+    avg: -4.39
+1 files processed. summary report below:
 summary
     transactions: 7
     transactions_in: 3

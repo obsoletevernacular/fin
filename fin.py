@@ -18,8 +18,7 @@ def fin():
 @click.pass_context
 def import_transactions(ctx, infiles, db):
     """Import a set of transactions from csv files."""
-    report = Report("summary")
-    rs = []
+    superreport = SuperReport("summary")
     for f in infiles:
         try:
             ts = utils.csvload(f)
@@ -32,19 +31,16 @@ def import_transactions(ctx, infiles, db):
         r = Report(account)
         for t in ts:
             r.add_transaction(t)
-            report.add_transaction(t)
-        rs.append(r)
-    # for r in rs:
-    #     click.echo(r)
+        superreport.add_report(r)
     try:
-        report.save(db)
+        superreport.save(db)
     except Report.ReportSaveError as e:
         ctx.fail("Failed to save transactions to %s" % db)
     except Exception as e:
         ctx.fail(e)
 
     click.echo("%d files processed and stored to %s" % (len(infiles), db))
-    click.echo(report)
+    click.echo(superreport)
 
 
 @click.command()
@@ -54,7 +50,7 @@ def load(ctx, db):
     """Load and display a stored report."""
     click.echo("Generating a report from %s" % db)
     try:
-        r = Report()
+        r = SuperReport()
         r.load(db)
         click.echo(r)
     except Report.ReportLoadError as e:
