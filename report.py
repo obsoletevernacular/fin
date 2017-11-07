@@ -14,12 +14,6 @@ class Report(object):
     sum_out: %.2f
     avg: %.2f"""
 
-    class ReportSaveError(Exception):
-        """Raise when report fails to save."""
-
-    class ReportLoadError(Exception):
-        """Raise when report fails to load."""
-
     def __init__(self, account="default"):
         """Report() creates a report."""
         self.transactions = []
@@ -63,6 +57,12 @@ class Report(object):
 class SuperReport(Report):
     """Enhanced report, moslty a container for several other reports."""
 
+    class SaveError(Exception):
+        """Raise when report fails to save."""
+
+    class LoadError(Exception):
+        """Raise when report fails to load."""
+
     def __init__(self, name="summary"):
         """Build a superreport."""
         super(SuperReport, self).__init__(name)
@@ -81,7 +81,7 @@ class SuperReport(Report):
                 pickle.dump(self, fh)
             fh.closed
         except Exception as e:
-            raise Report.ReportSaveError(str(e))
+            raise SuperReport.SaveError(str(e))
 
     def load(self, db='.default.obj'):
         """Reassign the self from a pickle obj in the fs."""
@@ -91,7 +91,7 @@ class SuperReport(Report):
             fh.closed
             self.__dict__.update(r.__dict__)
         except Exception as e:
-            raise Report.ReportLoadError(str(e))
+            raise SuperReport.LoadError(str(e))
 
     def __str__(self):
         """Representation for SuperReport."""

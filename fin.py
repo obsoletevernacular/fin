@@ -34,7 +34,7 @@ def import_transactions(ctx, infiles, db):
         superreport.add_report(r)
     try:
         superreport.save(db)
-    except Report.ReportSaveError as e:
+    except SuperReport.SaveError as e:
         ctx.fail("Failed to save transactions to %s" % db)
     except Exception as e:
         ctx.fail(e)
@@ -53,7 +53,7 @@ def load(ctx, db):
         r = SuperReport()
         r.load(db)
         click.echo(r)
-    except Report.ReportLoadError as e:
+    except SuperReport.LoadError as e:
         ctx.fail("Failed to load db %s:" % db)
     except Exception as e:
         ctx.fail(e)

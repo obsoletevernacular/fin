@@ -56,6 +56,35 @@ def test_superreport_load(superreport):
     assert str(r) == str(superreport)
 
 
+def test_report_load_notreport(superreport):
+    """Test report load with a non report object."""
+    db_file = ".notreport.obj"
+
+    class NotSuperReport():
+        pass
+
+    with open(db_file, "w") as fh:
+        nr = NotSuperReport()
+        pickle.dump(nr, fh)
+    fh.closed
+    pytest.raises(SuperReport.LoadError, superreport.load, db_file)
+
+
+def test_report_load_badpickle(superreport):
+    """Test report load with a non picklable object."""
+    db_file = ".badpickle.obj"
+    with open(db_file, "w") as fh:
+        fh.write("This is not a pickle.")
+    fh.closed
+    pytest.raises(SuperReport.LoadError, superreport.load, db_file)
+
+
+def test_report_load_nofile(superreport):
+    """Test loading a report with a nonexistent file."""
+    db_path = ".noexist.obj"
+    pytest.raises(SuperReport.LoadError, superreport.load, db_path)
+
+
 def test_superreport_add_report(superreport):
     """Test superreport adding a report."""
     r = Report("test1")
@@ -104,35 +133,6 @@ summary
     for i in range(1, 4):
         superreport.add_report(Report("test%d" % i))
     assert expect == str(superreport)
-
-
-def test_report_load_notreport(superreport):
-    """Test report load with a non report object."""
-    db_file = ".notreport.obj"
-
-    class NotSuperReport():
-        pass
-
-    with open(db_file, "w") as fh:
-        nr = NotSuperReport()
-        pickle.dump(nr, fh)
-    fh.closed
-    pytest.raises(Report.ReportLoadError, superreport.load, db_file)
-
-
-def test_report_load_badpickle(superreport):
-    """Test report load with a non picklable object."""
-    db_file = ".badpickle.obj"
-    with open(db_file, "w") as fh:
-        fh.write("This is not a pickle.")
-    fh.closed
-    pytest.raises(Report.ReportLoadError, superreport.load, db_file)
-
-
-def test_report_load_nofile(superreport):
-    """Test loading a report with a nonexistent file."""
-    db_path = ".noexist.obj"
-    pytest.raises(Report.ReportLoadError, superreport.load, db_path)
 
 
 class ReportTest(unittest.TestCase):
