@@ -12,15 +12,13 @@ def fin():
 
 
 @click.command("import")
-@click.argument('infiles', type=click.File('r'), nargs=-1)
+@click.argument('infiles', type=click.File('r'), nargs=-1, required=True)
 @click.option('--db', default=".default.obj", type=click.Path())
 @click.pass_context
 def import_transactions(ctx, infiles, db):
     """Import a set of transactions from csv files."""
     report = Report("summary")
     rs = []
-    if len(infiles) == 0:
-        ctx.fail("No files given.")
     for f in infiles:
         try:
             ts = utils.csvload(f)
@@ -65,7 +63,7 @@ def load(ctx, db):
 
 
 @click.command()
-@click.argument('infiles', type=click.File('r'), nargs=-1)
+@click.argument('infiles', type=click.File('r'), nargs=-1, required=True)
 @click.pass_context
 def report(ctx, infiles):
     """Generate a basic report from a group of csv files.
@@ -74,8 +72,6 @@ def report(ctx, infiles):
     """
     report = Report("summary")
     rs = []
-    if len(infiles) == 0:
-        ctx.fail("No files given.")
     for f in infiles:
         try:
             ts = utils.csvload(f)
