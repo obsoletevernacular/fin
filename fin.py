@@ -1,6 +1,7 @@
 """fin.py."""
 import click
 from report import Report
+from report import SuperReport
 import utils
 import os.path as path
 
@@ -70,8 +71,7 @@ def report(ctx, infiles):
 
     INFILES - <account>_<timeframe>.csv ...
     """
-    report = Report("summary")
-    rs = []
+    s = SuperReport()
     for f in infiles:
         try:
             ts = utils.csvload(f)
@@ -84,12 +84,8 @@ def report(ctx, infiles):
         r = Report(account)
         for t in ts:
             r.add_transaction(t)
-            report.add_transaction(t)
-        rs.append(r)
-    for r in rs:
-        click.echo(r)
-    click.echo("%d files processed. summary report below:" % len(rs))
-    click.echo(report)
+        s.add_report(r)
+    click.echo(s)
 
 
 fin.add_command(import_transactions)

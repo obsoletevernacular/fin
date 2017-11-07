@@ -90,6 +90,19 @@ class SuperReport(Report):
     def add_report(self, r):
         """Add a sub-report to the report."""
         self.reports.append(r)
+        for t in r.transactions:
+            self.add_transaction(t)
+
+    def __str__(self):
+        """Representation for SuperReport."""
+        r0 = ""
+        for r in self.reports:
+            r0 += str(r)
+            r0 += "\n"
+        r1 = "%d files processed. summary report below:" % len(self.reports)
+        r2 = super(SuperReport, self).__str__()
+        rep = "%s%s\n%s" % (r0, r1, r2)
+        return rep
 
 
 class Transaction(object):

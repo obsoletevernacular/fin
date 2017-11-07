@@ -24,43 +24,86 @@ def superreport(tmpdir):
     cwd.chdir()
 
 
-def test_report_save(report):
+def test_super_report_save(superreport):
     """Test report save functionality."""
-    report.save()
+    superreport.save()
     fh = open(".default.obj", "r")
     z = pickle.load(fh)
     # assume two reports are equal if their str() are equal
-    assert str(z) == str(report)
+    assert str(z) == str(superreport)
 
 
-def test_report_save_default(report):
+def test_superreport_save_default(superreport):
     """Test report save default location."""
     default_obj = ".default.obj"
-    report.save()
+    superreport.save()
     assert os.path.exists(default_obj)
 
 
-def test_report_save_db(report):
+def test_superreport_save_db(superreport):
     """Test report save with a passed db path."""
     db_path = ".testdb.obj"
-    report.save(db_path)
+    superreport.save(db_path)
     assert os.path.exists(db_path)
 
 
-def test_report_load(report):
+def test_superreport_load(superreport):
     """Test report load."""
     db_path = ".testdb.obj"
-    r = Report("saved")
+    r = SuperReport("saved")
     r.save(db_path)
-    report.load(db_path)
-    assert str(r) == str(report)
+    superreport.load(db_path)
+    assert str(r) == str(superreport)
 
 
 def test_superreport_add_report(superreport):
-    """Test report adding a report."""
+    """Test superreport adding a report."""
     r = Report("test1")
+    r.add_transaction(Transaction())
+    r.add_transaction(Transaction())
+    r.add_transaction(Transaction())
     superreport.add_report(r)
-    assert 1 == len(superreport.reports)
+    assert 3 == len(superreport.transactions)
+
+
+def test_supereport_str(superreport):
+    """Test superreport string representation."""
+    expect = """test1
+    transactions: 0
+    transactions_in: 0
+    transactions_out: 0
+    sum: 0.00
+    sum_in: 0.00
+    sum_out: 0.00
+    avg: 0.00
+test2
+    transactions: 0
+    transactions_in: 0
+    transactions_out: 0
+    sum: 0.00
+    sum_in: 0.00
+    sum_out: 0.00
+    avg: 0.00
+test3
+    transactions: 0
+    transactions_in: 0
+    transactions_out: 0
+    sum: 0.00
+    sum_in: 0.00
+    sum_out: 0.00
+    avg: 0.00
+3 files processed. summary report below:
+summary
+    transactions: 0
+    transactions_in: 0
+    transactions_out: 0
+    sum: 0.00
+    sum_in: 0.00
+    sum_out: 0.00
+    avg: 0.00"""
+    for i in range(1, 4):
+        superreport.add_report(Report("test%d" % i))
+    assert expect == str(superreport)
 
 
 def test_report_load_notreport(report):
