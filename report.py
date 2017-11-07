@@ -48,25 +48,6 @@ class Report(object):
             return 0
         return self.sum / count
 
-    def save(self, db=".default.obj"):
-        """Save a Report() object to the fs using pickle."""
-        try:
-            with open(db, "w") as fh:
-                pickle.dump(self, fh)
-            fh.closed
-        except Exception as e:
-            raise Report.ReportSaveError(str(e))
-
-    def load(self, db='.default.obj'):
-        """Reassign the self from a pickle obj in the fs."""
-        try:
-            with open(db, "r") as fh:
-                r = pickle.load(fh)
-            fh.closed
-            self.__dict__.update(r.__dict__)
-        except Exception as e:
-            raise Report.ReportLoadError(str(e))
-
     def __str__(self):
         """Report string representation."""
         return Report.template % (self.account,
@@ -92,6 +73,25 @@ class SuperReport(Report):
         self.reports.append(r)
         for t in r.transactions:
             self.add_transaction(t)
+
+    def save(self, db=".default.obj"):
+        """Save a Report() object to the fs using pickle."""
+        try:
+            with open(db, "w") as fh:
+                pickle.dump(self, fh)
+            fh.closed
+        except Exception as e:
+            raise Report.ReportSaveError(str(e))
+
+    def load(self, db='.default.obj'):
+        """Reassign the self from a pickle obj in the fs."""
+        try:
+            with open(db, "r") as fh:
+                r = pickle.load(fh)
+            fh.closed
+            self.__dict__.update(r.__dict__)
+        except Exception as e:
+            raise Report.ReportLoadError(str(e))
 
     def __str__(self):
         """Representation for SuperReport."""

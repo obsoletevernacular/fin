@@ -106,33 +106,33 @@ summary
     assert expect == str(superreport)
 
 
-def test_report_load_notreport(report):
+def test_report_load_notreport(superreport):
     """Test report load with a non report object."""
     db_file = ".notreport.obj"
 
-    class NotReport():
+    class NotSuperReport():
         pass
 
     with open(db_file, "w") as fh:
-        nr = NotReport()
+        nr = NotSuperReport()
         pickle.dump(nr, fh)
     fh.closed
-    pytest.raises(Report.ReportLoadError, report.load, db_file)
+    pytest.raises(Report.ReportLoadError, superreport.load, db_file)
 
 
-def test_report_load_badpickle(report):
+def test_report_load_badpickle(superreport):
     """Test report load with a non picklable object."""
     db_file = ".badpickle.obj"
     with open(db_file, "w") as fh:
         fh.write("This is not a pickle.")
     fh.closed
-    pytest.raises(Report.ReportLoadError, report.load, db_file)
+    pytest.raises(Report.ReportLoadError, superreport.load, db_file)
 
 
-def test_report_load_nofile(report):
+def test_report_load_nofile(superreport):
     """Test loading a report with a nonexistent file."""
     db_path = ".noexist.obj"
-    pytest.raises(Report.ReportLoadError, report.load, db_path)
+    pytest.raises(Report.ReportLoadError, superreport.load, db_path)
 
 
 class ReportTest(unittest.TestCase):
