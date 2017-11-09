@@ -26,7 +26,7 @@ def csvload(infile):
     reader = csv.DictReader(infile)
     headers = reader.fieldnames
     if headers != expected_headers:
-        raise InvalidCSV("CSV headers don't match.")
+        raise InvalidCSV("CSV headers don't match: %s" % str(headers))
 
     ts = []
     for row in reader:

@@ -255,11 +255,11 @@ class TransactionTest(unittest.TestCase):
 
     def test_create_transaction(self):
         """Test Transaction creation with custom inputs."""
-        ***REMOVED***
-        ***REMOVED***
-        ***REMOVED***
-        ***REMOVED***
-        ***REMOVED***
+        t_id = "012345678"
+        date = "1/1/1999"
+        amt = "0000.00000"
+        desc = "ACH Deposit BUSINESS  - COMMENT"
+        bal = "00000.00000"
         pmt_type = "ACH"
         t = Transaction(t_id, date, amt, desc, pmt_type, bal)
 
