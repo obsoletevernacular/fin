@@ -14,5 +14,5 @@ dev: venv
 venv: 
 	. venv/bin/activate
 
-.PHONY: test coverage init dev
+.PHONY: test coverage dev
 
