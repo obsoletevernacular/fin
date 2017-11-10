@@ -1,10 +1,11 @@
 """Unit tests for report.py."""
-from report import Report
-from report import SuperReport
-from report import Transaction
 import os
 import pickle
 import pytest
+
+from report import Report
+from report import SuperReport
+from report import Transaction
 
 
 @pytest.fixture

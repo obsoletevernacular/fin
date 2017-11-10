@@ -1,9 +1,9 @@
 """Unit tests for fin main cli code."""
-import unittest
 from click.testing import CliRunner
-import fin
 import os
 import pytest
+
+import fin
 
 
 @pytest.fixture()
@@ -61,44 +61,43 @@ def test_fin_import_savings(testfiles, finrunner):
         assert golden == res.output
 
 
-class FinTest(unittest.TestCase):
-    """Test fun cli."""
+def test_fin_bare(testfiles, finrunner):
+    """Test fin bare cli output."""
+    result = finrunner.invoke(fin.fin, [])
+    golden = ""
+    with open(os.path.join(testfiles,"fin_bare.golden"), "r") as f:
+        golden = f.read()
+    f.closed
+    assert golden == result.output
 
-    def test_fin_bare(self):
-        """Test fin bare cli output."""
-        runner = CliRunner()
-        result = runner.invoke(fin.fin, [])
+
+def test_fin_report_oct_individual(testfiles, finrunner):
+    """Test fin report on each individual account file."""
+    tests = ["fin_report_credit_oct",
+             "fin_report_checking_oct",
+             "fin_report_savings_oct"]
+    for t in tests:
+        testfile = "%s.test" % t
+        testpath = os.path.join(testfiles, testfile)
+        result = finrunner.invoke(fin.fin, ["report", testpath])
+        goldenfile = "%s.golden" % t
+        goldenpath = os.path.join(testfiles, goldenfile)
         golden = ""
-        with open("testfiles/fin_bare.golden", "r") as f:
+        with open(goldenpath, "r") as f:
             golden = f.read()
         f.closed
-        self.assertEqual(golden, result.output)
+        assert golden ==  result.output
 
-    def test_fin_report_oct_individual(self):
-        """Test fin report on each individual account file."""
-        runner = CliRunner()
-        tests = ["fin_report_credit_oct",
-                 "fin_report_checking_oct",
-                 "fin_report_savings_oct"]
-        for t in tests:
-            testpath = "testfiles/" + t + ".test"
-            result = runner.invoke(fin.fin, ["report", testpath])
-            goldenpath = "testfiles/" + t + ".golden"
-            golden = ""
-            with open(goldenpath, "r") as f:
-                golden = f.read()
-            f.closed
-            self.assertEqual(golden, result.output)
 
-    def test_fin_report_oct_composed(self):
-        """Test fin report with multiple transaction files."""
-        runner = CliRunner()
-        tests = ["testfiles/fin_report_checking_oct.test",
-                 "testfiles/fin_report_credit_oct.test",
-                 "testfiles/fin_report_savings_oct.test"]
-        result = runner.invoke(fin.report, tests)
-        golden = ""
-        with open("testfiles/fin_report_oct.golden", "r") as f:
-            golden = f.read()
-        f.closed
-        self.assertEqual(golden, result.output)
+def test_fin_report_oct_composed(testfiles, finrunner):
+    """Test fin report with multiple transaction files."""
+    tests = [os.path.join(testfiles,"fin_report_checking_oct.test"),
+             os.path.join(testfiles,"fin_report_credit_oct.test"),
+             os.path.join(testfiles,"fin_report_savings_oct.test")]
+    result = finrunner.invoke(fin.report, tests)
+    golden = ""
+    goldenpath = os.path.join(testfiles, "fin_report_oct.golden")
+    with open(goldenpath, "r") as f:
+        golden = f.read()
+    f.closed
+    assert golden == result.output
