@@ -1,5 +1,4 @@
 """Unit tests for report.py."""
-import unittest
 from report import Report
 from report import SuperReport
 from report import Transaction
@@ -142,8 +141,22 @@ def report():
 
 
 @pytest.fixture
-def transaction():
+def default_transaction():
     t = Transaction()
+    return t
+
+
+@pytest.fixture
+def transaction():
+    t_id = "012345678"
+    date = "1/1/1999"
+    amt = "0000.00000"
+    desc = "ACH Deposit BUSINESS  - COMMENT"
+    bal = "00000.00000"
+    pmt_type = "ACH"
+
+    t = Transaction(t_id, date, amt, desc, pmt_type, bal)
+
     return t
 
 
@@ -169,9 +182,9 @@ def test_account_name(report):
     assert "testaccount" == report.account
 
 
-def test_add_transaction(report, transaction):
+def test_add_transaction(report, default_transaction):
     """Test adding a transaction to a report."""
-    report.add_transaction(transaction)
+    report.add_transaction(default_transaction)
     assert 1 == len(report.transactions)
 
 
@@ -253,49 +266,67 @@ def test_report_negative_average(report):
     assert -2 == report.avg()
 
 
-class TransactionTest(unittest.TestCase):
-    """TransactionTest defines test cases for Transaction objects."""
+def test_create_default_transaction(default_transaction):
+    """Test Transaction creation with defaults."""
+    assert None != default_transaction
 
-    def test_create_default_transaction(self):
-        """Test Transaction creation with defaults."""
-        t = Transaction()
-        self.assertNotEqual(None, t)
 
-    def test_create_transaction(self):
-        """Test Transaction creation with custom inputs."""
-        t_id = "012345678"
-        date = "1/1/1999"
-        amt = "0000.00000"
-        desc = "ACH Deposit BUSINESS  - COMMENT"
-        bal = "00000.00000"
-        pmt_type = "ACH"
-        t = Transaction(t_id, date, amt, desc, pmt_type, bal)
+def test_transaction_id(transaction):
+    """Test Transaction creation with custom inputs."""
+    assert "012345678" == transaction.t_id
 
-        self.assertEqual(t_id, t.t_id)
-        self.assertEqual(date, t.date)
-        self.assertEqual(float(amt), t.amount)
-        self.assertEqual(desc, t.description)
-        self.assertEqual(float(bal), t.balance)
-        self.assertEqual(pmt_type, t.pmt_type)
-        # test blank category
-        self.assertEqual("", t.category)
 
-    def test_create_bad_transaction(self):
-        """Test Transaction creation with bad inputs."""
-        with self.assertRaises(ValueError):
-            Transaction(bal="notanumber", amt="alsonotanumber")
+def test_transaction_date(transaction):
+    """Test Transaction creation with custom inputs."""
+    assert "1/1/1999" == transaction.date
 
-    def test_update_category(self):
-        """Test updating the category of a Transaction."""
-        t = Transaction()
-        t.update_category("atm")
-        self.assertEqual("atm", t.category)
 
-    @unittest.skip("categorize not quite there yet.")
-    def test_categorize_pos(self):
-        """Test tranasaction self-catorization funcitonality."""
-        t = Transaction(desc="POS Transaction PLACE      LOCATION")
-        t.categorize()
-        self.assertEqual("POS Transaction", t.type)
-        self.assertEqual("PLACE", t.business)
-        self.assertEqual("LOCATION", t.locale)
+def test_transaction_amt(transaction):
+    """Test Transaction creation with custom inputs."""
+    assert 0 == transaction.amount
+
+
+def test_transaction_desc(transaction):
+    """Test Transaction creation with custom inputs."""
+    assert "ACH Deposit BUSINESS  - COMMENT" == transaction.description
+
+
+def test_transaction_bal(transaction):
+    """Test Transaction creation with custom inputs."""
+    assert 0 == transaction.balance
+
+
+def test_transaction_desc(transaction):
+    """Test Transaction creation with custom inputs."""
+    assert "ACH" == transaction.pmt_type
+
+
+def test_transaction_cat(transaction):
+    """Test Transaction creation with custom inputs."""
+    assert "" == transaction.category
+
+
+def test_create_bad_transaction_bal():
+    """Test Transaction creation with bad inputs."""
+    pytest.raises(ValueError, Transaction, bal="notanumber")
+
+
+def test_create_bad_transaction_amt():
+    """Test Transaction creation with bad inputs."""
+    pytest.raises(ValueError, Transaction, amt="notanumber")
+
+
+def test_update_category(transaction):
+    """Test updating the category of a Transaction."""
+    transaction.update_category("atm")
+    assert "atm" == transaction.category
+
+
+def test_categorize_pos():
+    """Test tranasaction self-catorization funcitonality."""
+    pytest.skip()
+    t = Transaction(desc="POS Transaction PLACE      LOCATION")
+    t.categorize()
+    self.assertEqual("POS Transaction", t.type)
+    self.assertEqual("PLACE", t.business)
+    self.assertEqual("LOCATION", t.locale)
