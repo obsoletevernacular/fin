@@ -135,38 +135,62 @@ summary
     assert expect == str(superreport)
 
 
-class ReportTest(unittest.TestCase):
-    """ReportTest defines test cases for Report."""
+@pytest.fixture
+def report():
+    r = Report("testaccount")
+    return r
 
-    def test_create_default_report(self):
-        """Test report creation with default params."""
-        r = Report()
-        self.assertNotEqual(None, r)
 
-    def test_create_report(self):
-        """Test report creation with custom params."""
-        r = Report("testaccount")
-        self.assertEqual("testaccount", r.account)
+@pytest.fixture
+def transaction():
+    t = Transaction()
+    return t
 
-    def test_add_transaction(self):
-        """Test adding a transaction to a report."""
-        r = Report("testaccount")
+
+@pytest.fixture
+def report_with_transactions(report):
+    # r = Report("testaccount")
+    for i in range(1, 5):
+        t = Transaction(amt=i)
+        report.add_transaction(t)
+        t = Transaction(amt=-i)
+        report.add_transaction(t)
+    return report    
+
+
+def test_create_default_report(report):
+    """Test report creation with default params."""
+    assert None != report
+
+
+def test_account_name(report):
+    """Test report creation with custom params."""
+    # r = Report("testaccount")
+    assert "testaccount" == report.account
+
+
+def test_add_transaction(report, transaction):
+    """Test adding a transaction to a report."""
+    report.add_transaction(transaction)
+    assert 1 == len(report.transactions)
+
+
+def test_add_transactions(report):
+    """Test adding a set of transactions to a report."""
+    for i in range(1, 5):
         t = Transaction()
-        r.add_transaction(t)
-        self.assertEqual(1, len(r.transactions))
+        report.add_transaction(t)
+    assert 4 == len(report.transactions)
 
-    def test_add_transactions(self):
-        """Test adding a set of transactions to a report."""
-        r = Report("testaccount")
-        for i in range(1, 5):
-            t = Transaction()
-            r.add_transaction(t)
-        self.assertEqual(4, len(r.transactions))
 
-    def test_report_default_print(self):
-        """Test string representation of Report."""
-        r = Report()
-        expected_str = """default
+def test_empty_report_transactions(report):
+    """Test a default report has zero transactions."""
+    assert 0 == len(report.transactions)
+
+
+def test_report_default_print(report):
+    """Test string representation of Report."""
+    expected_str = """testaccount
     transactions: 0
     transactions_in: 0
     transactions_out: 0
@@ -174,75 +198,59 @@ class ReportTest(unittest.TestCase):
     sum_in: 0.00
     sum_out: 0.00
     avg: 0.00"""
-        self.assertEqual(0, len(r.transactions))
-        self.assertEqual(expected_str, str(r))
+    assert expected_str == str(report)
 
-    def test_report_sum(self):
-        """Test report summation."""
-        r = Report("testaccount")
-        for i in range(1, 5):
-            t = Transaction(amt=i)
-            r.add_transaction(t)
-        self.assertEqual(10, r.sum)
 
-    def test_report_sum_in(self):
-        """Test report summation of incoming (positive) transactions."""
-        r = Report("testaccount")
-        for i in range(1, 5):
-            t = Transaction(amt=i)
-            r.add_transaction(t)
-        self.assertEqual(10, r.sum_in)
+def test_report_sum(report_with_transactions):
+    """Test report summation."""
+    report_with_transactions.add_transaction(Transaction(amt="50.50"))
+    assert 50.50 == report_with_transactions.sum
 
-    def test_report_sum_out(self):
-        """Test report summation of outgoing (negative) transactions."""
-        r = Report("testaccount")
-        for i in range(1, 5):
-            t = Transaction(amt=-i)
-            r.add_transaction(t)
-        self.assertEqual(-10, r.sum_out)
 
-    def test_report_sum_in_and_out(self):
-        """Test report summation of outgoing (negative) transactions."""
-        r = Report("testaccount")
-        for i in range(1, 5):
-            t = Transaction(amt=-i)
-            r.add_transaction(t)
-        for i in range(1, 5):
-            t = Transaction(amt=i)
-            r.add_transaction(t)
-        # assert summations
-        self.assertEqual(-10, r.sum_out)
-        self.assertEqual(10, r.sum_in)
-        self.assertEqual(0, r.sum)
-        # assert transaction counts
-        self.assertEqual(4, len(r.trans_in))
-        self.assertEqual(4, len(r.trans_out))
-        # assert 0 amt transaction goes to trans_in
-        r.add_transaction(Transaction())
-        self.assertEqual(5, len(r.trans_in))
+def test_report_sum_in(report_with_transactions):
+    """Test report summation of incoming (positive) transactions."""
+    assert 10 == report_with_transactions.sum_in
 
-    def test_report_basic_average(self):
-        """Test report average."""
-        r = Report("testaccount")
-        for i in range(0, 5):
-            t = Transaction(amt=i)
-            r.add_transaction(t)
-            # t = Transaction(amt=-i)
-            # r.add_transaction(t)
-        self.assertEqual(2, r.avg())
 
-    def test_report_default_average(self):
-        """Test report average with 0 transactions."""
-        r = Report()
-        self.assertEqual(0, r.avg())
+def test_report_sum_out(report_with_transactions):
+    """Test report summation of outgoing (negative) transactions."""
+    assert -10 == report_with_transactions.sum_out
 
-    def test_report_negative_average(self):
-        """Test report average with negative transactions."""
-        r = Report("testaccount")
-        for i in range(0, 5):
-            t = Transaction(amt=-i)
-            r.add_transaction(t)
-        self.assertEqual(-2, r.avg())
+
+def test_report_trans_in(report_with_transactions):
+    """Test report transactions in."""
+    assert 4 == len(report_with_transactions.trans_in)
+
+
+def test_report_trans_out(report_with_transactions):
+    """Test report transactions in."""
+    assert 4 == len(report_with_transactions.trans_out)
+
+
+def test_report_zero_transaction(report):
+    """Test amt=0 transaction goes to "in" pile."""
+    report.add_transaction(Transaction(amt=0))
+    assert 1 == len(report.trans_in)
+
+
+def test_report_basic_average(report):
+    """Test report average."""
+    for i in range(0,5):
+        report.add_transaction(Transaction(amt=i))
+    assert 2 == report.avg()
+
+
+def test_report_default_average(report):
+    """Test report average with 0 transactions."""
+    assert 0 == report.avg()
+
+
+def test_report_negative_average(report):
+    """Test report average with negative transactions."""
+    for i in range(0, 5):
+        t = Transaction(amt=-i)
+        report.add_transaction(t)
+    assert -2 == report.avg()
 
 
 class TransactionTest(unittest.TestCase):
