@@ -153,7 +153,7 @@ Until the tests are re-written using `pytest` we can make use of integraion with
 (venv) ❯ pytest
 ================================================== test session starts ==================================================
 platform darwin -- Python 2.7.10, pytest-3.2.3, py-1.4.34, pluggy-0.4.0
-rootdir: /Users/ggreving/gh/ggreving/fin, inifile:
+rootdir: $HOME/dev/obsoletevernacular/fin, inifile:
 collected 22 items
 
 test_fin.py .
