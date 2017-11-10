@@ -7,3 +7,4 @@ venv
 .cache
 *.egg-info
 *.obj
+.coverage
