@@ -331,3 +331,21 @@ def test_categorize_pos():
     self.assertEqual("POS Transaction", t.type)
     self.assertEqual("PLACE", t.business)
     self.assertEqual("LOCATION", t.locale)
+
+
+def test_report_search():
+    """Test report search functionality."""
+    r = Report()
+    t = Transaction(desc="POS Transaction SearchMatches     LOCATION")
+    f = Transaction(desc="POS Transaction SearchNotMatches     LOCATION")
+    r.add_transaction(t)
+    r.add_transaction(f)
+
+    found_report = r.search("SearchMatches")
+    assert 1 == len(found_report.transactions)
+
+
+def test_report_search_failed(report):
+    """Test report search failed."""
+    pytest.raises(Report.SearchFailed, report.search, "blah")
+

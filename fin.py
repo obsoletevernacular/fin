@@ -84,6 +84,28 @@ def report(ctx, infiles):
     click.echo(s)
 
 
+@click.command()
+@click.pass_context
+@click.option('--db', default=".default.obj", type=click.Path(exists=True))
+@click.argument('searchstr', type=click.STRING)
+def search(ctx, db, searchstr):
+    """Search a report for transactions containing a string."""
+    try:
+        r = SuperReport()
+        r.load(db)
+        found = r.search(searchstr)
+        for t in found.transactions:
+            print(t)
+        print(found)
+
+    except SuperReport.LoadError as e:
+        ctx.fail("Failed to load db %s:" % db)
+    except Report.SearchFailed as e:
+        ctx.exit("No transactions found.")
+    except Exception as e:
+        ctx.fail(e) 
+
 fin.add_command(import_transactions)
 fin.add_command(report)
 fin.add_command(load)
+fin.add_command(search)

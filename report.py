@@ -5,6 +5,9 @@ import pickle
 class Report(object):
     """Report is a group of transactions."""
 
+    class SearchFailed(Exception):
+        """Raise when search yields no results."""        
+
     template = """%s
     transactions: %d
     transactions_in: %d
@@ -42,6 +45,20 @@ class Report(object):
             return 0
         return self.sum / count
 
+
+    def search(self, searchstr):
+        """ Search through the report transactions and return matching."""
+        found_report = Report(searchstr)
+        searchstr = searchstr.lower()
+        for t in self.transactions:
+            # print("%s -> %s" % (searchstr, t.description))
+            if t.description.lower().find(searchstr) != -1:
+                found_report.add_transaction(t)
+        if len(found_report.transactions) == 0:
+            raise Report.SearchFailed
+
+        return found_report
+
     def __str__(self):
         """Report string representation."""
         return Report.template % (self.account,
@@ -54,8 +71,9 @@ class Report(object):
                                   self.avg())
 
 
+
 class SuperReport(Report):
-    """Enhanced report, moslty a container for several other reports."""
+    """Enhanced report, mostly a container for several other reports."""
 
     class SaveError(Exception):
         """Raise when report fails to save."""
@@ -127,3 +145,8 @@ class Transaction(object):
     def update_category(self, category=""):
         """Update the category for a transaction."""
         self.category = category
+
+
+    def __str__(self):
+        """Representation for Transaction."""
+        return("%s %f %s" % (self.description, self.amount, self.date))
