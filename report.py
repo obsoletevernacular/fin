@@ -95,7 +95,7 @@ class SuperReport(Report):
     def save(self, db=".default.obj"):
         """Save a Report() object to the fs using pickle."""
         try:
-            with open(db, "w") as fh:
+            with open(db, "wb") as fh:
                 pickle.dump(self, fh)
             fh.closed
         except Exception as e:
@@ -104,7 +104,7 @@ class SuperReport(Report):
     def load(self, db='.default.obj'):
         """Reassign the self from a pickle obj in the fs."""
         try:
-            with open(db, "r") as fh:
+            with open(db, "rb") as fh:
                 r = pickle.load(fh)
             fh.closed
             self.__dict__.update(r.__dict__)

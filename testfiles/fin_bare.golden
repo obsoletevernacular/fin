@@ -8,4 +8,5 @@ Options:
 Commands:
   import  Import a set of transactions from csv files.
   load    Load and display a stored report.
-  report  Generate a basic report from a group of csv...
+  report  Generate a basic report from a group of csv files.
+  search  Search a report for transactions containing a string.
