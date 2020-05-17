@@ -26,7 +26,7 @@ def import_transactions(ctx, infiles, db):
     else:
         df = pd.DataFrame()
 
-    orig_rows = df.size
+    orig_rows = df.shape[0]
     frames = []
     for f in infiles:
         df = pd.read_csv(f, skiprows=0)
@@ -34,18 +34,23 @@ def import_transactions(ctx, infiles, db):
             account = path.basename(f.name).split('.')[0]
         except Exception:
             account = f.name
-        if re.search("'checking'|'savings'|'credit'", account):
+        for acct in ["checking", "credit", "savings"]:
+            if acct in account:
+                account = acct
+                break
+        else:
             ctx.fail("Invalid filename: %s" % account)
         # set the account name for all the records
         df['account'] = account
+
         frames.append(df)
 
     df = pd.concat(frames)
-    processed_rows = df.size
+    processed_rows = df.shape[0]
     df.drop_duplicates(inplace = True, ignore_index=True)
     pd.to_pickle(df,db)
     click.echo("%d files processed and stored to %s" % (len(infiles), db))
-    click.echo("%d rows processed, %d rows added" % (processed_rows,df.size - orig_rows))
+    click.echo("%d rows processed, %d rows added" % (processed_rows, df.shape[0] - orig_rows))
 
 @click.command()
 @click.pass_context
@@ -64,29 +69,16 @@ def load(ctx, db):
 
 
 @click.command()
-@click.argument('infiles', type=click.File('r'), nargs=-1, required=True)
 @click.pass_context
-def report(ctx, infiles):
-    """Generate a basic report from a group of csv files.
-
-    INFILES - <account>_<timeframe>.csv ...
+@click.option('--db', default=".dataframe.pkl", type=click.Path(exists=True))
+def report(ctx, db):
+    """Generate a basic report from the loaded dataframe.
     """
-    s = SuperReport()
-    for f in infiles:
-        try:
-            ts = utils.csvload(f)
-        except utils.InvalidCSV as e:
-            ctx.fail("Failed to load %s: %s" % (f, str(e)))
-        try:
-            account = path.basename(f.name).split('.')[0]
-        except Exception:
-            account = f.name
-        r = Report(account)
-        for t in ts:
-            r.add_transaction(t)
-        s.add_report(r)
-    click.echo(s)
-
+    try:
+        df = pd.read_pickle(db)
+        click.echo(df.head(10))
+    except Exception as e:
+        ctx.fail(e) 
 
 @click.command()
 @click.pass_context
@@ -97,7 +89,8 @@ def search(ctx, db, searchstr):
     try:
         df = pd.read_pickle(db)
         results = df[df['Description'].str.contains(searchstr)]
-        print("matched %d transactions" % results.size)
+
+        click.echo("matched %d transactions" % results.shape[0])
     except Exception as e:
         ctx.fail(e) 
 
