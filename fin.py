@@ -1,9 +1,11 @@
 """fin.py."""
 import click
-from report import Report
-from report import SuperReport
-import utils
+# from report import Report
+# from report import SuperReport
+# import utils
 import os.path as path
+import re
+import pandas as pd
 
 
 @click.group()
@@ -14,34 +16,36 @@ def fin():
 
 @click.command("import")
 @click.argument('infiles', type=click.File('r'), nargs=-1, required=True)
-@click.option('--db', default=".default.obj", type=click.Path())
+@click.option('--db', default=".dataframe.pkl", type=click.Path())
 @click.pass_context
 def import_transactions(ctx, infiles, db):
     """Import a set of transactions from csv files."""
-    superreport = SuperReport("summary")
+    # superreport = SuperReport("summary")
+    if path.exists(db):
+        df = pd.read_pickle(db)
+    else:
+        df = pd.DataFrame()
+
+    orig_rows = df.size
+    frames = []
     for f in infiles:
-        try:
-            ts = utils.csvload(f)
-        except utils.InvalidCSV as e:
-            ctx.fail("Failed to load %s: %s" % (f, str(e)))
+        df = pd.read_csv(f, skiprows=0)
         try:
             account = path.basename(f.name).split('.')[0]
         except Exception:
             account = f.name
-        r = Report(account)
-        for t in ts:
-            r.add_transaction(t)
-        superreport.add_report(r)
-    try:
-        superreport.save(db)
-    except SuperReport.SaveError as e:
-        ctx.fail("Failed to save transactions to %s" % db)
-    except Exception as e:
-        ctx.fail(e)
+        if re.search("'checking'|'savings'|'credit'", account):
+            ctx.fail("Invalid filename: %s" % account)
+        # set the account name for all the records
+        df['account'] = account
+        frames.append(df)
 
+    df = pd.concat(frames)
+    processed_rows = df.size
+    df.drop_duplicates(inplace = True, ignore_index=True)
+    pd.to_pickle(df,db)
     click.echo("%d files processed and stored to %s" % (len(infiles), db))
-    click.echo(superreport)
-
+    click.echo("%d rows processed, %d rows added" % (processed_rows,df.size - orig_rows))
 
 @click.command()
 @click.pass_context

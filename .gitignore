@@ -8,3 +8,5 @@ venv
 *.egg-info
 *.obj
 .coverage
+.dataframe.pkl
+sample_data

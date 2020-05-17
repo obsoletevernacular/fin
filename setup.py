@@ -9,6 +9,7 @@ setup(
         'Click',
         'pytest',
         'pytest-coverage',
+        'pandas',
     ],
     entry_points='''
         [console_scripts]
