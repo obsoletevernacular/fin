@@ -7,6 +7,8 @@ import os.path as path
 import re
 import pandas as pd
 
+import dateutil
+from datetime import datetime
 
 @click.group()
 def fin():
@@ -42,13 +44,16 @@ def import_transactions(ctx, infiles, db):
             ctx.fail("Invalid filename: %s" % account)
         # set the account name for all the records
         df['account'] = account
-
+        df.index = pd.DatetimeIndex(df['Effective Date'].apply(dateutil.parser.parse))
         frames.append(df)
 
     df = pd.concat(frames)
+    df.index = pd.DatetimeIndex(df['Effective Date'].apply(dateutil.parser.parse))
     processed_rows = df.shape[0]
-    df.drop_duplicates(inplace = True, ignore_index=True)
+    df.drop_duplicates(inplace = True)
+    df.reset_index(drop=True)
     pd.to_pickle(df,db)
+
     click.echo("%d files processed and stored to %s" % (len(infiles), db))
     click.echo("%d rows processed, %d rows added" % (processed_rows, df.shape[0] - orig_rows))
 
