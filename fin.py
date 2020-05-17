@@ -90,22 +90,14 @@ def report(ctx, infiles):
 
 @click.command()
 @click.pass_context
-@click.option('--db', default=".default.obj", type=click.Path(exists=True))
+@click.option('--db', default=".dataframe.pkl", type=click.Path(exists=True))
 @click.argument('searchstr', type=click.STRING)
 def search(ctx, db, searchstr):
     """Search a report for transactions containing a string."""
     try:
-        r = SuperReport()
-        r.load(db)
-        found = r.search(searchstr)
-        for t in found.transactions:
-            print(t)
-        print(found)
-
-    except SuperReport.LoadError as e:
-        ctx.fail("Failed to load db %s:" % db)
-    except Report.SearchFailed as e:
-        ctx.exit("No transactions found.")
+        df = pd.read_pickle(db)
+        results = df[df['Description'].str.contains(searchstr)]
+        print("matched %d transactions" % results.size)
     except Exception as e:
         ctx.fail(e) 
 
