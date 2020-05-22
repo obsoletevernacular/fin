@@ -29,7 +29,7 @@ def import_transactions(ctx, infiles, db):
         df = pd.DataFrame()
 
     orig_rows = df.shape[0]
-    frames = []
+    frames = [df]
     for f in infiles:
         df = pd.read_csv(f, skiprows=0)
         try:
@@ -39,6 +39,7 @@ def import_transactions(ctx, infiles, db):
         for acct in ["checking", "credit", "savings"]:
             if acct in account:
                 account = acct
+                print("account = ", account)
                 break
         else:
             ctx.fail("Invalid filename: %s" % account)
@@ -49,9 +50,8 @@ def import_transactions(ctx, infiles, db):
 
     df = pd.concat(frames)
     df.index = pd.DatetimeIndex(df['Effective Date'].apply(dateutil.parser.parse))
-    processed_rows = df.shape[0]
-    df.drop_duplicates(inplace = True)
-    df.reset_index(drop=True)
+    processed_rows = df.shape[0] - orig_rows
+    df.drop_duplicates(inplace=True)
     pd.to_pickle(df,db)
 
     click.echo("%d files processed and stored to %s" % (len(infiles), db))
@@ -83,7 +83,7 @@ def report(ctx, db):
         df = pd.read_pickle(db)
         click.echo(df.head(10))
     except Exception as e:
-        ctx.fail(e) 
+        ctx.fail(e)
 
 @click.command()
 @click.pass_context
