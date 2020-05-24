@@ -52,10 +52,12 @@ def import_transactions(ctx, infiles, db):
     df.index = pd.DatetimeIndex(df['Effective Date'].apply(dateutil.parser.parse))
     processed_rows = df.shape[0] - orig_rows
     df.drop_duplicates(inplace=True)
+    df.sort_index(inplace=True)
     pd.to_pickle(df,db)
 
     click.echo("%d files processed and stored to %s" % (len(infiles), db))
     click.echo("%d rows processed, %d rows added" % (processed_rows, df.shape[0] - orig_rows))
+    click.echo("total rows: %d" % (df.shape[0]))
 
 @click.command()
 @click.pass_context
@@ -81,7 +83,7 @@ def report(ctx, db):
     """
     try:
         df = pd.read_pickle(db)
-        click.echo(df.head(10))
+        print(df)
     except Exception as e:
         ctx.fail(e)
 
